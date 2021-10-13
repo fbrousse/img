@@ -1,0 +1,18 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  push:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: build and push docker image
+      run: |
+        echo "${{ github.token }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        docker build -t genuine-img .
+        docker tag genuine-img:latest ghcr.io/${{ github.repository }}/genuine-img:latest
+        docker push ghcr.io/${{ github.repository }}/genuine-img:latest
